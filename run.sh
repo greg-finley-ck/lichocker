@@ -1,4 +1,10 @@
-#!/bin/sh
+#!/bin/bash
+cd /home/lichess/projects/lila
+
+whereis sbt
+cd  /home/lichess/.sdkman/candidates/sbt/current/bin && ls -la
+sbt sbtVersion
+
 cd /home/lichess/projects/lila
 
 # Run nginx.

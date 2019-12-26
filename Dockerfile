@@ -11,6 +11,8 @@ USER lichess
 
 ADD build /home/lichess/build
 
+SHELL ["/bin/bash", "-c"]
+
 RUN export PATH="/home/lichess/.cargo/bin:/home/lichess/.node/bin:/home/lichess/.node/lib/node_modules/bin:/home/lichess/.yarn/bin:$PATH" \
     && echo 'debconf debconf/frontend select Noninteractive' | \
         sudo debconf-set-selections \
@@ -24,16 +26,20 @@ RUN export PATH="/home/lichess/.cargo/bin:/home/lichess/.node/bin:/home/lichess/
         sudo tee -a /etc/apt/sources.list.d/sbt.list \
     && sudo apt-get update \
     && sudo apt-get install -y \
-        default-jdk \
         git-all \
         locales \
         mongodb-org \
         nginx \
         npm \
         parallel \
-        sbt \
         wget \
         redis-server \
+        zip \
+        unzip \
+        curl \
+    && curl -s "https://get.sdkman.io" | bash \
+    && source "/home/lichess/.sdkman/bin/sdkman-init.sh" \
+    && sdk install java 13.0.1.hs-adpt && sdk install sbt \
     # Set locale.
     && sudo locale-gen en_US.UTF-8 \
     # Silence the parallel citation warning.
@@ -70,7 +76,7 @@ ADD nginx.conf /etc/nginx/nginx.conf
 ENV LANG "en_US.UTF-8"
 ENV LC_CTYPE "en_US.UTF-8"
 
-ENV PATH "/home/lichess/.node/bin:/home/lichess/.node/lib/node_modules/bin:/home/lichess/.yarn/bin:${PATH}"
+ENV PATH "/home/lichess/.node/bin:/home/lichess/.node/lib/node_modules/bin:/home/lichess/.yarn/bin:/home/lichess/.sdkman/candidates:${PATH}"
 
 EXPOSE 80
 
